@@ -1,0 +1,14 @@
+doctype 5
+html
+	head
+		title= title
+		link(rel='stylesheet', href='http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css')
+		link(rel='stylesheet', href='/stylesheets/animate-custom.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+	body
+		div.container
+			div(class="navbar navbar-fixed-top")
+				div(class="brand")
+					a(class="noStyle", href="/") SwarmBots
+			div.container#main
+				block content
