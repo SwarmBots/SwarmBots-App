@@ -40,7 +40,7 @@ app.configure('development', function(){
 });
 
 // Create the OAuth interface.
-var oauth = rem.oauth(fb, "http://localhost:3000/oauth/callback/");
+var oauth = rem.oauth(fb, "http://swarmbots.herokuapp.com/oauth/callback/");
 
 // oauth.middleware intercepts the callback url that we set when we
 // created the oauth middleware.
