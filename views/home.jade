@@ -5,9 +5,14 @@ block content
 		h1 Hello #{name}
 	each bot in bots
 		div(class="column", id= bot.name)
-			each user in bot.queue
-				div(class="queue", id= user.name)
-					| #{user.name}
+			table(class="table table-striped")
+				tr
+					th
+						h2 #{bot.name}
+				each user in bot.queue
+					tr
+						td(class="queue", id= user.name)
+							h3 #{user.name}
 			button
 				| Join Queue
 
