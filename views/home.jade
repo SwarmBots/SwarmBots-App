@@ -4,9 +4,9 @@ block content
 	- if (name)
 		h1 Hello #{name}
 	each bot in bots
-		div(class=column, id= #{bot.name})
+		div(class="column", id= bot.name)
 			each user in bot.queue
-				div(class="queue", id= #{user.name})
+				div(class="queue", id= user.name)
 					| #{user.name}
 			button
 				| Join Queue
