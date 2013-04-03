@@ -10,13 +10,14 @@ var express = require('express')
   , rem = require('rem')
   , path = require('path');
 
+
+var MongoClient = require('mongodb').MongoClient;
+
 var fb = rem.connect('facebook.com').configure({
-  'key': process.env.FB_TEST_ID,
-  'secret': process.env.FB_TEST_SECRET
+  'key': process.env.FB_SWARMBOTS_ID,
+  'secret': process.env.FB_SWARMBOTS_SECRET
 });
 
-console.log(process.env.FB_TEST_ID);
-console.log(process.env.FB_TEST_SECRET);
 
 var app = express();
 
@@ -51,20 +52,15 @@ app.use(oauth.middleware(function (req, res, next) {
 
 
 app.get('/', function (req, res) {
-  // When the user is logged in, oauth.session(req) returns a Dropbox API
-  // uniquely authenticated with the user's credentials.
   var user = oauth.session(req);
   console.log(user);
   if (!user) {
-    res.end("<h1><a href='/login/'>Log in to Facebook via OAuth</a></h1>");
+    res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home"});
     return;
   }
-   
-  // Make some authenticated requests to list user information and the
-  // files available in this App's folder.
-  user('evan.simpson15').get(function (err, json) {
+  user('me').get(function (err, json) {
     console.log(json);
-    res.render('home', {name: json.name, title: "SwarmBots Home"});
+    res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home"});
   });
 });
 

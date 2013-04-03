@@ -8,7 +8,16 @@ html
 	body
 		div.container
 			div(class="navbar navbar-fixed-top")
-				div(class="brand")
+				div(id="brand")
 					a(class="noStyle", href="/") SwarmBots
+				ul(class="nav pull-right")
+					- if (loggedin=="false")
+						li
+							a(href="/login/") Login
+					- else 
+						li
+							a(href="/logout/") Logout
 			div.container#main
+				div.center
+					<iframe width="720" height="437" src="http://www.ustream.tv/embed/13850487?v=3&amp;wmode=direct" scrolling="no" frameborder="0" style="border: 0px none transparent;"></iframe>
 				block content
