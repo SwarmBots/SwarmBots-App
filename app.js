@@ -54,7 +54,7 @@ app.use(oauth.middleware(function (req, res, next) {
 app.get('/', function (req, res) {
   var user = oauth.session(req);
   console.log(user);
-  bots = [{"name": "charles", "queue": [{"name":"Evan"}, {"name": "Slater"}]},{"name":"Kathy", "queue":[{"name":"Adela"},{"name":"Dara"}]}]
+  bots = [{"name": "Bot 1", "queue": [{"name":"Evan"}, {"name": "Slater"}]},{"name":"Bot 2", "queue":[{"name":"Adela"},{"name":"Dara"}]}]
   if (!user) {
     res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home"});
     return;
