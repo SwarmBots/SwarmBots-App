@@ -49,7 +49,7 @@ var tw = rem.connect('twitter.com', 1.0).configure({
 
 // Create the OAuth interface.
 var fboauth = rem.oauth(fb, "http://"+ app.get('host') +"/oauth/callback/");
-var twoauth = rem.oauth(tw, "http://"+ app.get('host') +"/oauth/callback/")
+var twoauth = rem.oauth(tw, "http://"+ app.get('host') +"/oauth/twitter/")
 
 app.get('/login/', fboauth.login());
 app.get('/twoauth/', twoauth.login());
@@ -74,7 +74,7 @@ app.all('/*', function (req, res, next) {
 
 
 app.get('/', function (req, res) {
-  var user = oauth.session(req);
+  var user = fboauth.session(req);
   console.log(user);
   bots = [{"name": "Bot 1", "queue": [{"name":"Evan"}, {"name": "Slater"}]},{"name":"Bot 2", "queue":[{"name":"Adela"},{"name":"Dara"}]}]
   if (!user) {
