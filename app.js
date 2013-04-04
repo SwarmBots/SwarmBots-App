@@ -11,20 +11,7 @@ var express = require('express')
   , clarinet = require('clarinet')
   , carrier = require('carrier')
   , path = require('path');
-
-
 var MongoClient = require('mongodb').MongoClient;
-
-var fb = rem.connect('facebook.com').configure({
-  'key': process.env.FB_SWARMBOTS_ID,
-  'secret': process.env.FB_SWARMBOTS_SECRET
-});
-
-var tw = rem.connect('twitter.com', 1.0).configure({
-  'key': process.env.TW_SWARMBOTS_KEY,
-  'secret': process.env.TW_SWARMBOTS_SECRET
-});
-
 var app = express();
 
 app.configure(function(){
@@ -41,17 +28,35 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.configure('development', function(){
+app.configure('development', function () {
+  app.set('host', 'swarmbots.herokuapp.com');
   app.use(express.errorHandler());
 });
 
+app.configure('production', function () {
+  app.set('host', process.env.HOST);
+});
+
+var fb = rem.connect('facebook.com').configure({
+  'key': process.env.FB_SWARMBOTS_ID,
+  'secret': process.env.FB_SWARMBOTS_SECRET
+});
+
+var tw = rem.connect('twitter.com', 1.0).configure({
+  'key': process.env.TW_SWARMBOTS_KEY,
+  'secret': process.env.TW_SWARMBOTS_SECRET
+});
+
 // Create the OAuth interface.
-var oauth = rem.oauth(fb, "http://swarmbots.herokuapp.com/oauth/callback/");
-var twoauth = rem.oauth(tw, "http://swarmbots.herokuapp.com/oauth/callback/")
+var fboauth = rem.oauth(fb, "http://"+ app.get('host') +"/oauth/callback/");
+var twoauth = rem.oauth(tw, "http://"+ app.get('host') +"/oauth/callback/")
+
+app.get('/login/', fboauth.login());
+app.get('/twoauth/', twoauth.login());
 
 // oauth.middleware intercepts the callback url that we set when we
 // created the oauth middleware.
-app.use(oauth.middleware(function (req, res, next) {
+app.use(fboauth.middleware(function (req, res, next) {
   console.log("User is now authenticated.");
   res.redirect('/');
 }));
@@ -64,8 +69,6 @@ app.use(twoauth.middleware(function (req, res, next){
 app.all('/*', function (req, res, next) {
   req.twitter = twoauth.session(req);
   req.facebook = oauth.session(req);
-  console.log('app.all - req.facebook: ', req.facebook)
-  console.log('app.all - req.twitter: ', req.twitter)
   next();
 });
 
@@ -107,15 +110,12 @@ app.get('/stream', function (req, res){
 });
 
 
-app.get('/login/', oauth.login());
-app.get('/twoauth/', twoauth.login());
-
 // Logout URL clears the user's session.
-app.get('/logout/', oauth.logout(function (req, res) {
+app.get('/logout/', fboauth.logout(function (req, res) {
   res.redirect('/');
 }));
 
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  console.log("Express server listening on http://"+app.get('host')+ ":" + app.get('port'));
 });
