@@ -29,7 +29,7 @@ app.configure(function(){
 });
 
 app.configure('development', function () {
-  app.set('host', 'swarmbots.herokuapp.com');
+  app.set('host', 'localhost:' + app.get('port'));
   app.use(express.errorHandler());
 });
 
@@ -62,13 +62,13 @@ app.use(fboauth.middleware(function (req, res, next) {
 }));
 app.use(twoauth.middleware(function (req, res, next){
   console.log("Twauthenticated.")
-  res.redirect('/');
+  res.redirect('/stream');
 }));
 
 // Save the user session as req.user.
 app.all('/*', function (req, res, next) {
   req.twitter = twoauth.session(req);
-  req.facebook = oauth.session(req);
+  req.facebook = fboauth.session(req);
   next();
 });
 
@@ -107,6 +107,7 @@ app.get('/stream', function (req, res){
       }
     });
   });
+  res.redirect('/');
 });
 
 
@@ -117,5 +118,5 @@ app.get('/logout/', fboauth.logout(function (req, res) {
 
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on http://"+app.get('host')+ ":" + app.get('port'));
+  console.log("Express server listening on http://"+app.get('host'));
 });
