@@ -42,27 +42,16 @@ var fb = rem.connect('facebook.com').configure({
   'secret': process.env.FB_SWARMBOTS_SECRET
 });
 
-var tw = rem.connect('twitter.com', 1.0).configure({
-  'key': process.env.TW_SWARMBOTS_KEY,
-  'secret': process.env.TW_SWARMBOTS_SECRET
-});
-
 // Create the OAuth interface.
 var fboauth = rem.oauth(fb, "http://"+ app.get('host') +"/oauth/callback/");
-var twoauth = rem.oauth(tw, "http://"+ app.get('host') +"/oauth/twitter/")
 
 app.get('/login/', fboauth.login());
-app.get('/twoauth/', twoauth.login());
 
 // oauth.middleware intercepts the callback url that we set when we
 // created the oauth middleware.
 app.use(fboauth.middleware(function (req, res, next) {
   console.log("User is now authenticated.");
   res.redirect('/');
-}));
-app.use(twoauth.middleware(function (req, res, next){
-  console.log("Twauthenticated.")
-  res.redirect('/stream');
 }));
 
 // Save the user session as req.user.
@@ -90,28 +79,6 @@ app.get('/', function (req, res) {
 
 
 app.get('/users', user.list);
-
-
-app.get('/stream', function (req, res){
-  var user = twoauth.session(req);
-  user.stream('statuses/filter').get({track:"#SwarmBots"},function(err, stream, three) {
-    stream.pipe(clarinet.createStream()).on('key', function (key) {
-      if (key == 'text') {
-        this.once('value', function (tweet) {
-          console.log(String(tweet));
-        })
-      }
-    });
-    /*carrier.carry(stream, function(line){
-      var line = JSON.parse(line);
-      //Filter DELETE requests from stream
-      if (!line.delete){
-        console.log(line.text);
-      }
-    });*/
-  });
-  res.redirect('/');
-});
 
 
 // Logout URL clears the user's session.
