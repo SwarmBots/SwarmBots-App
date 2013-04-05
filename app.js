@@ -90,22 +90,25 @@ app.get('/', function (req, res) {
 
 
 app.get('/users', user.list);
-app.get('/test', function(){ 
-    fb('evan.simpson15').get(function (err, json) {
-      console.log('My profile:', json);
-  });
-});
+
 
 app.get('/stream', function (req, res){
   var user = twoauth.session(req);
   user.stream('statuses/filter').get({track:"#SwarmBots"},function(err, stream, three) {
-    carrier.carry(stream, function(line){
+    stream.pipe(clarinet.createStream()).on('key', function (key) {
+      if (key == 'text') {
+        this.once('value', function (tweet) {
+          console.log(String(tweet));
+        })
+      }
+    });
+    /*carrier.carry(stream, function(line){
       var line = JSON.parse(line);
       //Filter DELETE requests from stream
       if (!line.delete){
         console.log(line.text);
       }
-    });
+    });*/
   });
   res.redirect('/');
 });
