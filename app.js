@@ -56,7 +56,6 @@ app.use(fboauth.middleware(function (req, res, next) {
 
 // Save the user session as req.user.
 app.all('/*', function (req, res, next) {
-  req.twitter = twoauth.session(req);
   req.facebook = fboauth.session(req);
   next();
 });
