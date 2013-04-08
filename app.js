@@ -76,7 +76,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     }
     user('me').get(function (err, json) {
       console.log(json);
-      SBusers.save({name: json.name});  
+      //SBusers.save({name: json.name});  
       res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home"});
     });
   });
