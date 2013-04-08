@@ -14,7 +14,7 @@ var express = require('express')
 var MongoClient = require('mongodb').MongoClient;
 var app = express();
 
-MongoClient.connect(process.env.Mongo_URI, function (err, db){ 
+MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){ 
   if(err) {return console.dir(err); }
 
   var SBusers = db.collection('users');
