@@ -10,14 +10,12 @@ var express = require('express')
   , rem = require('rem')
   , clarinet = require('clarinet')
   , carrier = require('carrier')
+  , mongo = require('./dbhelper')
   , path = require('path');
 var MongoClient = require('mongodb').MongoClient;
 var app = express();
 
 MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){ 
-  if(err) {return console.dir(err); }
-
-  var SBusers = db.collection('users');
 
   app.configure(function(){
     app.set('port', process.env.PORT || 4000);
@@ -75,9 +73,12 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
       return;
     }
     user('me').get(function (err, json) {
+      json['sid'] = json.id;
+      json['type'] = 'fb';
       console.log(json);
-      //SBusers.save({name: json.name});  
-      res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home"});
+      mongo.updateUser(db, json, function(){
+        res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home"});
+      });     
     });
   });
 
