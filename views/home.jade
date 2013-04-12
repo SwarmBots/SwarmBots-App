@@ -1,18 +1,19 @@
 extends layout
 
 block content
-	- if (name)
+	//- if (name)
+	div
 		h1 Hello #{name}
 		div.center#commandCenter
-			form(action='/submit', method='/post')
-				| Move: 
-				select(name="bot", class="commandForm")
+			form(action='/submit', method='/post', id="commandForm")
+				label(for='bot') Move: 
+				select(name="bot")
 					option(value="blue") Blue Bot
 					option(value="green") Green Bot
 					option(value="red") Red Bot
 					option(value="yellow") Yellow Bot
 					option(value="pink") Pink Bot
-				select(name="command", class="commandForm")
+				select(name="command")
 					option(value="forward") Forward
 					option(value="left") Left
 					option(value="right") Right
@@ -20,17 +21,18 @@ block content
 				| units.
 				input(type='submit', value='Command!', class="commandForm")
 
-	div.center
-		each bot in bots
-			div(class="column", id= bot.name)
-				table(class="table")
-					tr
-						th
-							h2 #{bot.name}
-					- if (bot.queue)
-						each user in bot.queue
+		div.center
+			div#bots
+				each bot in bots
+					div(class="column", id= bot.name)
+						table(class="table")
 							tr
-								td(class="queue", id= user.name)
-									h3 #{user.name}
+								th
+									h2 #{bot.name}
+							- if (bot.queue)
+								each user in bot.queue
+									tr
+										td(class="queue", id= user.name)
+											h3 #{user.name}
 
 	

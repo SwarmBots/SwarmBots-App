@@ -88,6 +88,23 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     res.redirect('/');
   }));
 
+  app.post('/submit', function (req, res){
+    var user = fboauth.session(req);
+    var bot = req.body.bot;
+    user('me').get(function (err, json){
+      mongo.getSwarmBot(db, bot, function (err, sb){
+        if (!sb.queue){
+          sb.queue = [];
+        }
+        sb.queue.push(json.name);
+        mongo.updateSwarmBot(db, sb, function (){
+          mongo.getSwarmBots(db, function (err, bots){
+            res.render('_bots', {bots: bots});
+          });
+        });
+      });
+    });
+  });
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log("Express server listening on http://"+app.get('host'));
