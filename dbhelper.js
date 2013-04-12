@@ -9,6 +9,10 @@ var get = function (collection, uid, callback){
   }
 }
 
+var getAll = function(collection, callback){
+  collection.find().toArray(callback);
+}
+
 var update = function (collection, doc, callback){
   if (doc.id != null){
     collection.update({id: doc.id}, doc, {upsert: true}, callback);
@@ -47,6 +51,10 @@ exports.updateSwarmBot = function(db, swarmDoc, callback){
   update(collection, swarmDoc, callback);
 }
 
+exports.getSwarmBots = function(db, callback){
+  var collection = db.collection('bots');
+  getAll(collection, callback);
+}
 
 
 

@@ -3,6 +3,23 @@ extends layout
 block content
 	- if (name)
 		h1 Hello #{name}
+		div.center#commandCenter
+			form(action='/submit', method='/post')
+				| Move: 
+				select(name="bot", class="commandForm")
+					option(value="blue") Blue Bot
+					option(value="green") Green Bot
+					option(value="red") Red Bot
+					option(value="yellow") Yellow Bot
+					option(value="pink") Pink Bot
+				select(name="command", class="commandForm")
+					option(value="forward") Forward
+					option(value="left") Left
+					option(value="right") Right
+					option(value="reverse")  Reverse
+				| units.
+				input(type='submit', value='Command!', class="commandForm")
+
 	div.center
 		each bot in bots
 			div(class="column", id= bot.name)
@@ -10,11 +27,10 @@ block content
 					tr
 						th
 							h2 #{bot.name}
-					each user in bot.queue
-						tr
-							td(class="queue", id= user.name)
-								h3 #{user.name}
-				button
-					| Join Queue
+					- if (bot.queue)
+						each user in bot.queue
+							tr
+								td(class="queue", id= user.name)
+									h3 #{user.name}
 
 	

@@ -67,25 +67,21 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
   app.get('/', function (req, res) {
     var user = fboauth.session(req);
     console.log(user);
-    bots = [{"name": "Bot 1", "queue": [{"name":"Evan"}, {"name": "Slater"}]},{"name":"Bot 2", "queue":[{"name":"Adela"},{"name":"Dara"}]}]
-    if (!user) {
-      res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home"});
-      return;
-    }
-    user('me').get(function (err, json) {
-      json['sid'] = json.id;
-      json['type'] = 'fb';
-      console.log(json);
-      mongo.updateUser(db, json, function(){
-        res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home"});
-      });     
+    mongo.getSwarmBots(db, function (err, docs) {
+      if (!user) {
+        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", bots: docs});
+        return;
+      }
+      user('me').get(function (err, json) {
+        json['sid'] = json.id;
+        json['type'] = 'fb';
+        console.log(json);
+        mongo.updateUser(db, json, function(){
+          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", bots: docs});
+        });     
+      });
     });
   });
-
-
-
-  app.get('/users', user.list);
-
 
   // Logout URL clears the user's session.
   app.get('/logout/', fboauth.logout(function (req, res) {

@@ -197,9 +197,16 @@ body {
 	font-family: 'RobotoThin', Arial, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6, p, li, a, span, .navbar .nav>li>a:hover {
+h1, h2, h3, h4, h5, h6, p, li, a, form, span, .navbar .nav>li>a:hover {
 	color: #FFFFFF;
+    font-family: 'RobotoThin', Arial, sans-serif;
 }
+
+input, select, option{
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+
 
 body, a, p, li, blockquote {
 	font-size: 17.5px;
@@ -235,6 +242,10 @@ a:hover {
 	color: #FFFFFF;
 }
 
+select{
+    max-width: 150px;
+}
+
 .navbar .nav>li>a{
 	color: #FFFFFF;
 	font-size: 16px;
@@ -250,8 +261,7 @@ a:hover {
 }
 
 .column{
-    width: 250px;
-    max-width: 250px;
+    width: 200px;
     display: inline-block;
     padding: 10px
 }
@@ -310,6 +320,7 @@ a:hover {
     height: 450px;
 }
 
+
 #brand {
 	float: left;
 	display: block;
@@ -341,3 +352,10 @@ a:hover {
 	margin-top: 60px;
 }
 
+#commandCenter{
+    margin: auto;
+    padding: 75px;
+    background-color: rgba(0, 0, 0, .5);
+    width: 600px;
+    max-height: 150px;
+}
