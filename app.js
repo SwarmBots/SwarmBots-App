@@ -91,6 +91,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
   app.post('/submit', function (req, res){
     var user = fboauth.session(req);
     var bot = req.body.bot;
+    console.log('Commanding ', bot);
     user('me').get(function (err, json){
       mongo.getSwarmBot(db, bot, function (err, sb){
         if (!sb.queue){
