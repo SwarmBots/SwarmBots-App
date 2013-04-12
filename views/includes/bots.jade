@@ -8,4 +8,10 @@ each bot in bots
 				each user in bot.queue
 					tr
 						td(class="queue", id= user.name)
-							h3 #{user.name}
+							table
+								tr
+									td(rowspan=2) 
+										img(src=#{user.photo})
+									td #{user.name}
+								tr
+									td #{user.location}

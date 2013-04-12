@@ -100,12 +100,12 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     var user = fboauth.session(req);
     var bot = req.body.bot;
     console.log('Commanding ',  bot);
-    user('me').get(function (err, json){
+    user('me').get({'fields':'id,name,picture,location'}, function (err, json){
       mongo.getSwarmBot(db, bot, function (err, sb){
         if (!sb.queue){
           sb.queue = [];
         }
-        sb.queue.push({name: json.name});
+        sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:id});
         mongo.updateSwarmBot(db, sb, function (){
           mongo.getSwarmBots(db, function (err, bots){
             res.render('includes/bots', {bots: bots.sort(compareBots)});
