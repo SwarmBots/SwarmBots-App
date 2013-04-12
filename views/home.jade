@@ -18,21 +18,12 @@ block content
 					option(value="left") Left
 					option(value="right") Right
 					option(value="reverse")  Reverse
+				input(type='text', value='0', name='distance', id='commandDist', maxlength=2, max=99, required='required', )
 				| units.
 				input(type='submit', value='Command!', class="commandForm")
 
 		div.center
 			div#bots
-				each bot in bots
-					div(class="column", id= bot.name)
-						table(class="table")
-							tr
-								th
-									h2 #{bot.name}
-							- if (bot.queue)
-								each user in bot.queue
-									tr
-										td(class="queue", id= user.name)
-											h3 #{user.name}
+				include includes/bots
 
 	

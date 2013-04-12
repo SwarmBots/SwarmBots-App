@@ -359,3 +359,7 @@ select{
     width: 600px;
     max-height: 150px;
 }
+
+#commandDist{
+    max-width: 50px;
+}
