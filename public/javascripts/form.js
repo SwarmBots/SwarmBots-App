@@ -3,5 +3,6 @@ $(function(){
 		$.post('/submit', $('#commandForm').serialize(), function (data){
 			$('#bots').html(data);
 		});
+		return false;
 	});
 });

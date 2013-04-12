@@ -1,11 +1,10 @@
 extends layout
 
 block content
-	//- if (name)
-	div
+	- if (name)
 		h1 Hello #{name}
 		div.center#commandCenter
-			form(action='/submit', method='/post', id="commandForm")
+			form(action='/submit', method='post', id="commandForm")
 				label(for='bot') Move: 
 				select(name="bot")
 					option(value="blue") Blue Bot
@@ -20,7 +19,8 @@ block content
 					option(value="reverse")  Reverse
 				input(type='text', value='0', name='distance', id='commandDist', maxlength=2, max=99, required='required', )
 				| units.
-				input(type='submit', value='Command!', class="commandForm")
+				Button(id="sendCommand")
+					| Command!
 
 		div.center
 			div#bots
