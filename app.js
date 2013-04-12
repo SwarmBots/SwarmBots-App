@@ -100,7 +100,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         sb.queue.push({name: json.name});
         mongo.updateSwarmBot(db, sb, function (){
           mongo.getSwarmBots(db, function (err, bots){
-            res.render('includes/bots', {bots: bots});
+            res.render('includes/bots', {bots: bots.sort()});
           });
         });
       });
