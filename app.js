@@ -45,6 +45,14 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     'secret': process.env.FB_SWARMBOTS_SECRET
   });
 
+  var compareBots = function(a, b){
+    if (a.name < b.name)
+     return -1;
+    if (a.name > b.name)
+      return 1;
+    return 0;
+  }
+
   // Create the OAuth interface.
   var fboauth = rem.oauth(fb, "http://"+ app.get('host') +"/oauth/callback/");
 
@@ -66,10 +74,9 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
 
   app.get('/', function (req, res) {
     var user = fboauth.session(req);
-    console.log(user);
     mongo.getSwarmBots(db, function (err, docs) {
       if (!user) {
-        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", bots: docs});
+        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", bots: docs.sort(compareBots)});
         return;
       }
       user('me').get(function (err, json) {
@@ -77,7 +84,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         json['type'] = 'fb';
         console.log(json);
         mongo.updateUser(db, json, function(){
-          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", bots: docs});
+          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", bots: docs.sort(compareBots)});
         });     
       });
     });
@@ -106,16 +113,6 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
       });
     });
   });
-
-
-  var compareBots = function(a, b){
-    if (a.name < b.name)
-     return -1;
-    if (a.name > b.name)
-      return 1;
-    return 0;
-  }
-
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log("Express server listening on http://"+app.get('host'));
