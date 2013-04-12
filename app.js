@@ -100,12 +100,22 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         sb.queue.push({name: json.name});
         mongo.updateSwarmBot(db, sb, function (){
           mongo.getSwarmBots(db, function (err, bots){
-            res.render('includes/bots', {bots: bots.sort()});
+            res.render('includes/bots', {bots: bots.sort(comopareBots)});
           });
         });
       });
     });
   });
+
+
+  var compareBots = function(a, b){
+    if (a.name < b.name)
+     return -1;
+    if (a.name > b.name)
+      return 1;
+    return 0;
+  }
+
 
   http.createServer(app).listen(app.get('port'), function(){
     console.log("Express server listening on http://"+app.get('host'));
