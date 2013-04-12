@@ -263,7 +263,8 @@ select{
 .column{
     width: 200px;
     display: inline-block;
-    padding: 10px
+    padding: 10px;
+    float: left;
 }
 
 .navbar .nav>.active {
@@ -362,4 +363,9 @@ select{
 
 #commandDist{
     max-width: 50px;
+}
+
+#bots{
+    width: 1100px;
+    margin: auto;
 }

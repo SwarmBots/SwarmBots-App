@@ -42,7 +42,8 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
 
   var fb = rem.connect('facebook.com').configure({
     'key': process.env.FB_SWARMBOTS_ID,
-    'secret': process.env.FB_SWARMBOTS_SECRET
+    'secret': process.env.FB_SWARMBOTS_SECRET,
+    'scope': ["user_location"]
   });
 
   var compareBots = function(a, b){
@@ -79,7 +80,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", bots: docs.sort(compareBots)});
         return;
       }
-      user('me').get(function (err, json) {
+      user('me').get({'fields':'id,name,picture,location'}, function (err, json) {
         json['sid'] = json.id;
         json['type'] = 'fb';
         console.log(json);
