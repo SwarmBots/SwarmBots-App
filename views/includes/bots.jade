@@ -8,9 +8,9 @@ each bot in bots
 				each user in bot.queue
 					tr
 						td(class="queue", id= user.name)
-							table
+							table.userDisp
 								tr
-									td(rowspan=2) 
+									td(rowspan=2)
 										img(src= user.photo )
 									td #{user.name}
 								tr
