@@ -91,7 +91,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
   app.post('/submit', function (req, res){
     var user = fboauth.session(req);
     var bot = req.body.bot;
-    console.log('Commanding ', bot);
+    console.log('Commanding ',  bot);
     user('me').get(function (err, json){
       mongo.getSwarmBot(db, bot, function (err, sb){
         if (!sb.queue){
@@ -100,7 +100,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         sb.queue.push({name: json.name});
         mongo.updateSwarmBot(db, sb, function (){
           mongo.getSwarmBots(db, function (err, bots){
-            res.render('_bots', {bots: bots});
+            res.render('includes/bots', {bots: bots});
           });
         });
       });
