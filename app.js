@@ -105,22 +105,21 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         if (!sb.queue){
           sb.queue = [];
         }
-        for (var i =0; i<sb.queue.length; i++){
-          if (sb.queue[i].sid == json.id){
+        mongo.getQueue(db, function (err, queue){
+          if(queue.indexOf({"_id":json.sid}) > -1){
             mongo.getSwarmBots(db, function (err, bots){
-              res.render('includes/bots', {bots: bots.sort(compareBots)});
-            });
+            res.render('includes/bots', {bots: bots.sort(compareBots)});
           }else{
-            if (i == sb.queue.length-1){
-              sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
-              mongo.updateSwarmBot(db, sb, function (){
+            sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
+            mongo.updateSwarmBot(db, sb, function (){
+              mongo.updateQueue(db, json.id, function (){
                 mongo.getSwarmBots(db, function (err, bots){
                   res.render('includes/bots', {bots: bots.sort(compareBots)});
                 });
               });
-            }
+            });
           }
-        }
+        });
       });
     });
   });

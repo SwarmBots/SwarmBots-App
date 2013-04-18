@@ -21,6 +21,16 @@ var update = function (collection, doc, callback){
   }
 }
 
+exports.updateQueue = function(db, uid, callback){
+  var collection = db.collection('queue');
+  update(collection, {id:uid}, callback);
+}
+
+exports.getQueue = function(db, callback){
+  var collection = db.collection('queue');
+  getAll(collection, callback);
+}
+
 exports.updateTest = function (db, doc, callback){
   var collection = db.collection('test');
   update(collection, doc, callback);
