@@ -21,14 +21,14 @@ var update = function (collection, doc, callback){
   }
 }
 
-exports.updateQueue = function(db, uid, callback){
+exports.updateQueue = function(db, doc, callback){
   var collection = db.collection('queue');
-  update(collection, {"_id":uid}, callback);
+  update(collection, doc, callback);
 }
 
 exports.getQueue = function(db, callback){
   var collection = db.collection('queue');
-  getAll(collection, callback);
+  get(collection, "people" ,callback);
 }
 
 exports.updateTest = function (db, doc, callback){

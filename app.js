@@ -107,14 +107,16 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         }
         mongo.getQueue(db, function (err, queue){
           console.log(queue, json.id);
-          if(queue.indexOf({"_id":json.id}) > -1){
+          if(queue.people.indexOf({_id:json.id}) > -1){
             mongo.getSwarmBots(db, function (err, bots){
               res.render('includes/bots', {bots: bots.sort(compareBots)});
             });
           }else{
+            console.log(queue.indexOf({"_id":json.id}));
             sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
+            queue.people.push(json.id);
             mongo.updateSwarmBot(db, sb, function (){
-              mongo.updateQueue(db, json.id, function (){
+              mongo.updateQueue(db, queue, function (){
                 mongo.getSwarmBots(db, function (err, bots){
                   res.render('includes/bots', {bots: bots.sort(compareBots)});
                 });
