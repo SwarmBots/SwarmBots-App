@@ -107,7 +107,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         }
         queued = false;
         for (queuer in sb.queue){
-          if queuer.sid == json.id{
+          if (queuer.sid == json.id){
             queued = true;
           }
         }
