@@ -108,7 +108,8 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         mongo.getQueue(db, function (err, queue){
           if(queue.indexOf({"_id":json.sid}) > -1){
             mongo.getSwarmBots(db, function (err, bots){
-            res.render('includes/bots', {bots: bots.sort(compareBots)});
+              res.render('includes/bots', {bots: bots.sort(compareBots)});
+            });
           }else{
             sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
             mongo.updateSwarmBot(db, sb, function (){
