@@ -15,7 +15,7 @@ var getAll = function(collection, callback){
 
 var update = function (collection, doc, callback){
   if (doc.id != null){
-    collection.update({id: doc.id}, doc, {upsert: true}, callback);
+    collection.update({"_id": doc.id}, doc, {upsert: true}, callback);
   }else{
     collection.update({sid: doc.sid}, doc, {upsert: true}, callback);
   }
