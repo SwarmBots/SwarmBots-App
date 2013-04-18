@@ -66,12 +66,6 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     res.redirect('/');
   }));
 
-  // Save the user session as req.user.
-  app.all('/*', function (req, res, next) {
-    req.facebook = fboauth.session(req);
-    next();
-  });
-
 
   app.get('/', function (req, res) {
     var user = fboauth.session(req);
@@ -106,7 +100,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
           sb.queue = [];
         }
         mongo.getQueue(db, function (err, queue){
-          console.log(queue, json.id);
+          console.log(queue, json.id, typeof queue.people);
           if(queue.people.indexOf({_id:json.id}) > -1){
             mongo.getSwarmBots(db, function (err, bots){
               res.render('includes/bots', {bots: bots.sort(compareBots)});
