@@ -14,8 +14,8 @@ var getAll = function(collection, callback){
 }
 
 var update = function (collection, doc, callback){
-  if (doc.id != null){
-    collection.update({"_id": doc.id}, doc, {upsert: true}, callback);
+  if (doc["_id"] != null){
+    collection.update({"_id": doc["_id"]}, doc, {upsert: true}, callback);
   }else{
     collection.update({sid: doc.sid}, doc, {upsert: true}, callback);
   }
@@ -23,7 +23,7 @@ var update = function (collection, doc, callback){
 
 exports.updateQueue = function(db, uid, callback){
   var collection = db.collection('queue');
-  update(collection, {"_id:uid"}, callback);
+  update(collection, {"_id":uid}, callback);
 }
 
 exports.getQueue = function(db, callback){
