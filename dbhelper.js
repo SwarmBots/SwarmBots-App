@@ -23,7 +23,7 @@ var update = function (collection, doc, callback){
 
 exports.updateQueue = function(db, uid, callback){
   var collection = db.collection('queue');
-  update(collection, {id:uid}, callback);
+  update(collection, {"_id:uid"}, callback);
 }
 
 exports.getQueue = function(db, callback){
