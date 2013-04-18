@@ -100,8 +100,9 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
           sb.queue = [];
         }
         mongo.getQueue(db, function (err, queue){
-          console.log(queue, json.id, typeof queue.people);
-          if(queue.people.indexOf({_id:json.id}) > -1){
+          console.log(queue, json.id, queue.people);
+          anArray = queue['people'];
+          if(anArray.indexOf({_id:json.id}) > -1){
             mongo.getSwarmBots(db, function (err, bots){
               res.render('includes/bots', {bots: bots.sort(compareBots)});
             });
