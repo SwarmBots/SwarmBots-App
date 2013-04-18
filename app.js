@@ -77,7 +77,6 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
       user('me').get({'fields':'id,name,picture,location'}, function (err, json) {
         json['sid'] = json.id;
         json['type'] = 'fb';
-        console.log(json);
         mongo.updateUser(db, json, function(){
           res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", bots: docs.sort(compareBots)});
         });     
@@ -100,13 +99,11 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
           sb.queue = [];
         }
         mongo.getQueue(db, function (err, queue){
-          console.log(queue, json.id, queue.people);
           if(queue.people.indexOf(json.id) > -1){
             mongo.getSwarmBots(db, function (err, bots){
               res.render('includes/bots', {bots: bots.sort(compareBots)});
             });
           }else{
-            console.log(queue.people.indexOf(json.id));
             sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
             queue.people.push(json.id);
             mongo.updateSwarmBot(db, sb, function (){
