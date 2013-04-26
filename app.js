@@ -66,12 +66,6 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     res.redirect('/');
   }));
 
-  // Save the user session as req.user.
-  app.all('/*', function (req, res, next) {
-    req.facebook = fboauth.session(req);
-    next();
-  });
-
 
   app.get('/', function (req, res) {
     var user = fboauth.session(req);
@@ -83,7 +77,8 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
       user('me').get({'fields':'id,name,picture,location'}, function (err, json) {
         json['sid'] = json.id;
         json['type'] = 'fb';
-        console.log(errr, json);
+        console.log(json);
+        console.log(err);
         mongo.updateUser(db, json, function(){
           res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", bots: docs.sort(compareBots)});
         });     
@@ -106,11 +101,22 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         if (!sb.queue){
           sb.queue = [];
         }
-        sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
-        mongo.updateSwarmBot(db, sb, function (){
-          mongo.getSwarmBots(db, function (err, bots){
-            res.render('includes/bots', {bots: bots.sort(compareBots)});
-          });
+        mongo.getQueue(db, function (err, queue){
+          if(queue.people.indexOf(json.id) > -1){
+            mongo.getSwarmBots(db, function (err, bots){
+              res.render('includes/bots', {bots: bots.sort(compareBots)});
+            });
+          }else{
+            sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
+            queue.people.push(json.id);
+            mongo.updateSwarmBot(db, sb, function (){
+              mongo.updateQueue(db, queue, function (){
+                mongo.getSwarmBots(db, function (err, bots){
+                  res.render('includes/bots', {bots: bots.sort(compareBots)});
+                });
+              });
+            });
+          }
         });
       });
     });

@@ -14,11 +14,21 @@ var getAll = function(collection, callback){
 }
 
 var update = function (collection, doc, callback){
-  if (doc.id != null){
-    collection.update({id: doc.id}, doc, {upsert: true}, callback);
+  if (doc["_id"] != null){
+    collection.update({"_id": doc["_id"]}, doc, {upsert: true}, callback);
   }else{
     collection.update({sid: doc.sid}, doc, {upsert: true}, callback);
   }
+}
+
+exports.updateQueue = function(db, doc, callback){
+  var collection = db.collection('queue');
+  update(collection, doc, callback);
+}
+
+exports.getQueue = function(db, callback){
+  var collection = db.collection('queue');
+  get(collection, "people" ,callback);
 }
 
 exports.updateTest = function (db, doc, callback){
