@@ -83,7 +83,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
       user('me').get({'fields':'id,name,picture,location'}, function (err, json) {
         json['sid'] = json.id;
         json['type'] = 'fb';
-        console.log(json);
+        console.log(errr, json);
         mongo.updateUser(db, json, function(){
           res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", bots: docs.sort(compareBots)});
         });     
@@ -101,6 +101,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     var bot = req.body.bot;
     console.log('Commanding ',  bot);
     user('me').get({'fields':'id,name,picture,location'}, function (err, json){
+      console.log(err, json);
       mongo.getSwarmBot(db, bot, function (err, sb){
         if (!sb.queue){
           sb.queue = [];
