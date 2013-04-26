@@ -107,7 +107,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
               res.render('includes/bots', {bots: bots.sort(compareBots)});
             });
           }else{
-            sb.queue.push({name: json.name, photo: json.picture.data.url, location: json.location.name, sid:json.id});
+            sb.queue.push({name: json.name, photo: json.picture.data.url, location: (json.location||{}).name, sid:json.id});
             queue.people.push(json.id);
             mongo.updateSwarmBot(db, sb, function (){
               mongo.updateQueue(db, queue, function (){
