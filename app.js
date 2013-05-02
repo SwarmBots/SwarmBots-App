@@ -61,7 +61,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
 
   app.get('/', function (req, res) {
     var user = fboauth.session(req);
-    mongo.getQueue(db, function (err, docs) {
+    mongo.getQueue(db, function (err, queue) {
       if (!user) {
         res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home"});
         return;
@@ -72,7 +72,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         console.log(json);
         console.log(err);
         mongo.updateUser(db, json, function(){
-          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", users:docs.meta});
+          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", users:queue.meta});
         });     
       });
     });
