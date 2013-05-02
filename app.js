@@ -64,7 +64,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     mongo.getQueue(db, function (err, queue) {
       console.log(queue.meta);
       if (!user) {
-        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", users:queue.meta});
+        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", users:queue.meta.reverse()});
         return;
       }
       user('me').get({'fields':'id,name,picture,location'}, function (err, json) {
@@ -73,7 +73,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         console.log(json);
         console.log(err);
         mongo.updateUser(db, json, function(){
-          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", users:queue.meta});
+          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", users:queue.meta.reverse()});
         });     
       });
     });
@@ -92,13 +92,13 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
       mongo.getQueue(db, function (err, queue){
         if(queue.people.indexOf(json.id) > -1){
           mongo.getSwarmBots(db, function (err, bots){
-            res.render('includes/queue', {users:queue.meta});
+            res.render('includes/queue', {users:queue.meta.reverse()});
           });
         }else{
           queue.people.push(json.id);
           queue.meta.push({name: json.name, photo: json.picture.data.url, location: (json.location||{}).name, sid:json.id})
           mongo.updateQueue(db, queue, function (){
-            res.render('includes/queue', {users:queue.meta});
+            res.render('includes/queue', {users:queue.meta.reverse()});
           });;
         }
       });
