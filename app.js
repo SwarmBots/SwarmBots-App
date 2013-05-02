@@ -72,7 +72,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         console.log(json);
         console.log(err);
         mongo.updateUser(db, json, function(){
-          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home"});
+          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", users:queue.meta});
         });     
       });
     });
