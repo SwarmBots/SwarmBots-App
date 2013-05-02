@@ -95,7 +95,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
           });
         }else{
           queue.people.push(json.id);
-          queue.meta.push({{name: json.name, photo: json.picture.data.url, location: (json.location||{}).name, sid:json.id}})
+          queue.meta.push({name: json.name, photo: json.picture.data.url, location: (json.location||{}).name, sid:json.id})
           mongo.updateQueue(db, queue, function (){
             res.render('includes/queue', {users:queue.meta});
           });;
