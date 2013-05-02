@@ -64,7 +64,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
     mongo.getQueue(db, function (err, queue) {
       console.log(queue.meta);
       if (!user) {
-        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home"});
+        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", users:queue.meta});
         return;
       }
       user('me').get({'fields':'id,name,picture,location'}, function (err, json) {
