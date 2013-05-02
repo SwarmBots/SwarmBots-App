@@ -43,16 +43,8 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
   var fb = rem.connect('facebook.com').configure({
     'key': process.env.FB_SWARMBOTS_ID,
     'secret': process.env.FB_SWARMBOTS_SECRET,
-    'scope': ["user_location"]
+    'scope': ["user_location","friends_location"]
   });
-
-  var compareBots = function(a, b){
-    if (a.name < b.name)
-     return -1;
-    if (a.name > b.name)
-      return 1;
-    return 0;
-  }
 
   // Create the OAuth interface.
   var fboauth = rem.oauth(fb, "http://"+ app.get('host') +"/oauth/callback/");
@@ -69,9 +61,9 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
 
   app.get('/', function (req, res) {
     var user = fboauth.session(req);
-    mongo.getSwarmBots(db, function (err, docs) {
+    mongo.getQueue(db, function (err, docs) {
       if (!user) {
-        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home", bots: docs.sort(compareBots)});
+        res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home"});
         return;
       }
       user('me').get({'fields':'id,name,picture,location'}, function (err, json) {
@@ -80,7 +72,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
         console.log(json);
         console.log(err);
         mongo.updateUser(db, json, function(){
-          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home", bots: docs.sort(compareBots)});
+          res.render('home', {name: json.name, loggedin: "true", title: "SwarmBots Home"});
         });     
       });
     });
@@ -93,31 +85,20 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
 
   app.post('/submit', function (req, res){
     var user = fboauth.session(req);
-    var bot = req.body.bot;
-    console.log('Commanding ',  bot);
     user('me').get({'fields':'id,name,picture,location'}, function (err, json){
       console.log(err, json);
-      mongo.getSwarmBot(db, bot, function (err, sb){
-        if (!sb.queue){
-          sb.queue = [];
+
+      mongo.getQueue(db, function (err, queue){
+        if(queue.people.indexOf(json.id) > -1){
+          mongo.getSwarmBots(db, function (err, bots){
+            res.render('includes/queue');
+          });
+        }else{
+          queue.people.push(json.id);
+          mongo.updateQueue(db, queue, function (){
+            res.render('includes/queue');
+          });;
         }
-        mongo.getQueue(db, function (err, queue){
-          if(queue.people.indexOf(json.id) > -1){
-            mongo.getSwarmBots(db, function (err, bots){
-              res.render('includes/bots', {bots: bots.sort(compareBots)});
-            });
-          }else{
-            sb.queue.push({name: json.name, photo: json.picture.data.url, location: (json.location||{}).name, sid:json.id});
-            queue.people.push(json.id);
-            mongo.updateSwarmBot(db, sb, function (){
-              mongo.updateQueue(db, queue, function (){
-                mongo.getSwarmBots(db, function (err, bots){
-                  res.render('includes/bots', {bots: bots.sort(compareBots)});
-                });
-              });
-            });
-          }
-        });
       });
     });
   });
