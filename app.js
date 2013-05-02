@@ -62,6 +62,7 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
   app.get('/', function (req, res) {
     var user = fboauth.session(req);
     mongo.getQueue(db, function (err, queue) {
+      console.log(queue.meta);
       if (!user) {
         res.render('home', {name: null, loggedin: "false", title: "SwarmBots Home"});
         return;
