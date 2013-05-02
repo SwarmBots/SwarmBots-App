@@ -5,25 +5,11 @@ block content
 		h1 Hello #{name}
 		div.center#commandCenter
 			form(action='/submit', method='post', id="commandForm")
-				label(for='bot') Move: 
-				select(name="bot")
-					option(value="blue") Blue Bot
-					option(value="green") Green Bot
-					option(value="red") Red Bot
-					option(value="yellow") Yellow Bot
-					option(value="pink") Pink Bot
-				select(name="command")
-					option(value="forward") Forward
-					option(value="left") Left
-					option(value="right") Right
-					option(value="reverse")  Reverse
-				input(type='text', value='0', name='distance', id='commandDist', maxlength=2, max=99, required='required', )
-				| units.
 				Button(id="sendCommand")
 					| Command!
 
 	div.center
-		div#bots
-			include includes/bots
+		div#queue
+			include includes/queue
 
 	
