@@ -91,12 +91,13 @@ MongoClient.connect(process.env.SWARMBOTS_MONGO_URI, function (err, db){
       mongo.getQueue(db, function (err, queue){
         if(queue.people.indexOf(json.id) > -1){
           mongo.getSwarmBots(db, function (err, bots){
-            res.render('includes/queue');
+            res.render('includes/queue', {users:queue.meta});
           });
         }else{
           queue.people.push(json.id);
+          queue.meta.push({{name: json.name, photo: json.picture.data.url, location: (json.location||{}).name, sid:json.id}})
           mongo.updateQueue(db, queue, function (){
-            res.render('includes/queue');
+            res.render('includes/queue', {users:queue.meta});
           });;
         }
       });

@@ -3,14 +3,13 @@ div(class="column", id= bot.name)
     tr
       th
         h2 #{bot.name}
-    - if (bot.queue)
-      each user in bot.queue
-        tr
-          td(class="queue", id= user.name)
-            table.userDisp
-              tr
-                td(rowspan=2)
-                  img(src= user.photo )
-                td #{user.name}
-              tr
-                td #{user.location}
+    each user in users
+      tr
+        td(class="queue", id= user.name)
+          table.userDisp
+            tr
+              td(rowspan=2)
+                img(src= user.photo )
+              td #{user.name}
+            tr
+              td #{user.location}
